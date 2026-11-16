@@ -1,0 +1,32 @@
+{
+  "empresa": "SmartFit / Academia FitSystem",
+  "planos_disponiveis": [
+    {
+      "id": "plano_basico",
+      "nome": "Plano Fit Essencial",
+      "preco_mensal": 89.90,
+      "horario": "horario_livre_exceto_pico",
+      "aulas_coletivas": false,
+      "permite_convidados": false,
+      "taxa_adesao": 0.0
+    },
+    {
+      "id": "plano_plus",
+      "nome": "Plano Fit Plus",
+      "preco_mensal": 129.90,
+      "horario": "total",
+      "aulas_coletivas": true,
+      "permite_convidados": false,
+      "taxa_adesao": 49.90
+    },
+    {
+      "id": "plano_black",
+      "nome": "Plano Fit Black (VIP)",
+      "preco_mensal": 179.90,
+      "horario": "total",
+      "aulas_coletivas": true,
+      "permite_convidados": true,
+      "taxa_adesao": 0.0
+    }
+  ]
+}

@@ -1,0 +1,207 @@
+{
+  "regras": [
+    {
+      "id": "R01",
+      "categoria": "objetivo",
+      "descricao": "Quem busca hipertrofia ou emagrecimento avancado precisa de suporte completo de estrutura.",
+      "se": [{"fato": "objetivo", "op": "==", "valor": "hipertrofia"}],
+      "entao": {"fato": "necessita_aulas_ou_aparelhos_avancados", "valor": true},
+      "certeza": 0.95
+    },
+    {
+      "id": "R02",
+      "categoria": "frequencia",
+      "descricao": "Alunos que pretendem frequentar 4 ou mais vezes na semana precisam de acesso total em qualquer horario.",
+      "se": [{"fato": "frequencia_semanal", "op": ">=", "valor": 4}],
+      "entao": {"fato": "exige_horario", "valor": "total"},
+      "certeza": 0.90
+    },
+    {
+      "id": "R03",
+      "categoria": "frequencia",
+      "descricao": "Alunos com frequencia de ate 3 vezes na semana podem se adaptar bem ao plano essencial.",
+      "se": [{"fato": "frequencia_semanal", "op": "<=", "valor": 3}],
+      "entao": {"fato": "perfil_frequencia", "valor": "moderada"},
+      "certeza": 0.85
+    },
+    {
+      "id": "R04",
+      "categoria": "servicos",
+      "descricao": "Quem faz questao de participar de aulas coletivas (spinning, danca, yoga) precisa do plano Plus ou Black.",
+      "se": [{"fato": "quer_aulas_coletivas", "op": "==", "valor": true}],
+      "entao": {"fato": "plano_minimo_exigido", "valor": "plano_plus"},
+      "certeza": 1.0
+    },
+    {
+      "id": "R05",
+      "categoria": "servicos",
+      "descricao": "Quem deseja levar amigos ou convidados para treinar precisa obrigatoriamente do plano Black.",
+      "se": [{"fato": "quer_convidados", "op": "==", "valor": true}],
+      "entao": {"fato": "recomendacao_direta", "valor": "plano_black"},
+      "certeza": 1.0
+    },
+    {
+      "id": "R06",
+      "categoria": "horario",
+      "descricao": "Se o aluno so pode treinar em horarios de pico e quer flexibilidade, descartar planos restritos.",
+      "se": [{"fato": "horario_preferido", "op": "==", "valor": "pico"}],
+      "entao": {"fato": "exige_horario", "valor": "total"},
+      "certeza": 0.90
+    },
+    {
+      "id": "R07",
+      "categoria": "orcamento",
+      "descricao": "Se o orcamento maximo do cliente for inferior a 90 reais, nenhum plano padrao cobre.",
+      "se": [{"fato": "orcamento_maximo", "op": "<", "valor": 89.90}],
+      "entao": {"fato": "status_conclusao", "valor": "sem_cobertura_orcamento"},
+      "certeza": 1.0
+    },
+    {
+      "id": "R08",
+      "categoria": "orcamento",
+      "descricao": "Se o orcamento esta entre 90 e 128 reais, o plano aplicavel e o Essencial.",
+      "se": [
+        {"fato": "orcamento_maximo", "op": ">=", "valor": 89.90},
+        {"fato": "orcamento_maximo", "op": "<", "valor": 129.90}
+      ],
+      "entao": {"fato": "teto_orcamento_plano", "valor": "plano_basico"},
+      "certeza": 0.95
+    },
+    {
+      "id": "R09",
+      "categoria": "orcamento",
+      "descricao": "Se o orcamento esta entre 129 e 178 reais, o teto passa a ser o plano Plus.",
+      "se": [
+        {"fato": "orcamento_maximo", "op": ">=", "valor": 129.90},
+        {"fato": "orcamento_maximo", "op": "<", "valor": 179.90}
+      ],
+      "entao": {"fato": "teto_orcamento_plano", "valor": "plano_plus"},
+      "certeza": 0.95
+    },
+    {
+      "id": "R10",
+      "categoria": "orcamento",
+      "descricao": "Se o orcamento e igual ou superior a 179 reais, o cliente tem elegibilidade financeira para o plano Black.",
+      "se": [{"fato": "orcamento_maximo", "op": ">=", "valor": 179.90}],
+      "entao": {"fato": "teto_orcamento_plano", "valor": "plano_black"},
+      "certeza": 1.0
+    },
+    {
+      "id": "R11",
+      "categoria": "descarte",
+      "descricao": "Descartar plano Essencial se o cliente exige aulas coletivas.",
+      "se": [
+        {"fato": "quer_aulas_coletivas", "op": "==", "valor": true},
+        {"fato": "plano_candidato", "op": "==", "valor": "plano_basico"}
+      ],
+      "entao": {"fato": "descartar_plano", "valor": true},
+      "certeza": 1.0
+    },
+    {
+      "id": "R12",
+      "categoria": "descarte",
+      "descricao": "Descartar plano Essencial se o cliente quer levar convidados.",
+      "se": [
+        {"fato": "quer_convidados", "op": "==", "valor": true},
+        {"fato": "plano_candidato", "op": "==", "valor": "plano_basico"}
+      ],
+      "entao": {"fato": "descartar_plano", "valor": true},
+      "certeza": 1.0
+    },
+    {
+      "id": "R13",
+      "categoria": "descarte",
+      "descricao": "Descartar plano Plus se o cliente quer levar convidados.",
+      "se": [
+        {"fato": "quer_convidados", "op": "==", "valor": true},
+        {"fato": "plano_candidato", "op": "==", "valor": "plano_plus"}
+      ],
+      "entao": {"fato": "descartar_plano", "valor": true},
+      "certeza": 1.0
+    },
+    {
+      "id": "R14",
+      "categoria": "descarte",
+      "descricao": "Descartar qualquer plano cujo preco mensal ultrapasse o orcamento informado pelo cliente.",
+      "se": [
+        {"fato": "preco_plano", "op": ">", "fato_comparacao": "orcamento_maximo"}
+      ],
+      "entao": {"fato": "descartar_plano", "valor": true},
+      "certeza": 1.0
+    },
+    {
+      "id": "R15",
+      "categoria": "recomendacao",
+      "descricao": "Se nenhum restritivo extra foi acionado e a frequencia e baixa, sugerir o plano Essencial como melhor custo-beneficio.",
+      "se": [
+        {"fato": "perfil_frequencia", "op": "==", "valor": "moderada"},
+        {"fato": "quer_aulas_coletivas", "op": "==", "valor": false},
+        {"fato": "quer_convidados", "op": "==", "valor": false}
+      ],
+      "entao": {"fato": "recomendacao_final", "valor": "plano_basico"},
+      "certeza": 0.85
+    },
+    {
+      "id": "R16",
+      "categoria": "recomendacao",
+      "descricao": "Se o cliente quer aulas coletivas e tem orcamento compativel, recomendar o plano Plus.",
+      "se": [
+        {"fato": "quer_aulas_coletivas", "op": "==", "valor": true},
+        {"fato": "orcamento_maximo", "op": ">=", "valor": 129.90}
+      ],
+      "entao": {"fato": "recomendacao_final", "valor": "plano_plus"},
+      "certeza": 0.90
+    },
+    {
+      "id": "R17",
+      "categoria": "recomendacao",
+      "descricao": "Se o cliente busca hipertrofia intensa, frequenta 5x na semana e quer diferenciais, recomendar o plano Black.",
+      "se": [
+        {"fato": "frequencia_semanal", "op": ">=", "valor": 5},
+        {"fato": "objetivo", "op": "==", "valor": "hipertrofia"},
+        {"fato": "orcamento_maximo", "op": ">=", "valor": 179.90}
+      ],
+      "entao": {"fato": "recomendacao_final", "valor": "plano_black"},
+      "certeza": 0.95
+    },
+    {
+      "id": "R18",
+      "categoria": "ajuste_certeza",
+      "descricao": "Reduzir levemente a certeza da recomendacao se o usuario informar dados genericos na faixa de horario.",
+      "se": [{"fato": "horario_preferido", "op": "==", "valor": "indiferente"}],
+      "entao": {"fato": "fator_ajuste_certeza", "valor": -0.05},
+      "certeza": 0.80
+    },
+    {
+      "id": "R19",
+      "categoria": "excecao",
+      "descricao": "Se o orcamento for menor que o plano mais barato e o cliente recusar financiamento de taxa, encerrar com inconclusao orientada.",
+      "se": [
+        {"fato": "orcamento_maximo", "op": "<", "valor": 89.90},
+        {"fato": "aceita_ajuste_orcamento", "op": "==", "valor": false}
+      ],
+      "entao": {"fato": "conclusao_final", "valor": "sem_conclusao"},
+      "certeza": 1.0
+    },
+    {
+      "id": "R20",
+      "categoria": "validacao",
+      "descricao": "Garantir que a frequencia semanal informada esteja entre 1 e 7 dias.",
+      "se": [
+        {"fato": "frequencia_semanal", "op": ">", "valor": 7}
+      ],
+      "entao": {"fato": "entrada_invalida", "valor": true},
+      "certeza": 1.0
+    },
+    {
+      "id": "R21",
+      "categoria": "validacao",
+      "descricao": "Identificar ausencia de dados essenciais caso o objetivo nao seja preenchido.",
+      "se": [
+        {"fato": "objetivo", "op": "==", "valor": ""}
+      ],
+      "entao": {"fato": "informacao_incompleta", "valor": true},
+      "certeza": 1.0
+    }
+  ]
+}
